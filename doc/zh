@@ -1,0 +1,34 @@
+打开vue的模板。使用npm install下载依赖（node_moudules）。使用npm run dev启动项目
+
+1、前端页面入口：main.js index.html
+2、vue-admin-template 模板是基于:vue+element-ui技术实现
+3、目录
+    3.1、build：项目进行构建和编译的文件。
+    3.2、config：项目的基本配置。
+        3.2.1、dev.env.js：开发环境与后端的接口地址
+        3.2.2、prod.env.js:生产环境与后端的接口地址
+    3.3、node_moudules:依赖的静态资源
+    3.4、src
+        3.4.1 api：定义调用的方法
+        3.4.2 assets：存放静态资源（js、css、图片等）
+        3.4.3 components:组件
+        3.4.4 icons:项目中相关的图标
+        3.4.5 router：路由
+        3.4.6 store:脚本文件（不常用）
+        3.4.7 styles:样式（不常用）
+        3.4.8 utils:相关的工具类（不常用）
+        3.4.8 views:项目的开发页面
+4、引入文件（图片）上传
+    4.1、ImageCropper和PanThumb组件
+
+5、引入富文本
+    5.1、在build-->webpack.dev.conf.js
+    5.2、templateParameters:{
+            // BASE_URL指定的是static
+            BASE_URL:config.dev.assetsPublicPath+config.dev.assetsSubDirectory
+        }
+    5.3、在项目入口的index.html里面增加
+    <script src=<%=BASE_URL %>/tinymce4.7.5/tinymce.min.js></script>
+    <script src=<%=BASE_URL %>/tinymce4.7.5/langs/zh_CN.js></script>
+    5.4、import Tinymce from '@/components/Tinymce'
+
