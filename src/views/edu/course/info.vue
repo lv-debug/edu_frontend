@@ -83,7 +83,8 @@ export default {
         price:0,
         subjectId:'',
         subjectParentId:'',
-        cover:'/static/1.jpg'
+        cover:'/static/1.jpg',
+        courseId:''
       },
       BASE_API: process.env.BASE_API, // 接口API地址
       teacherList:[],
@@ -92,9 +93,23 @@ export default {
     }
   },
   created() {
-    console.log('info created')
-    this.getTeacherList()
-    this.getSubjectList()
+    if(this.$route.params && this.$route.params.id) {
+      debugger
+      this.courseId = this.$route.params.id
+      this.getInfo()
+    }else{
+      this.getTeacherList()
+      this.getSubjectList()
+    }
+  },
+  //监听
+  watch: {
+    //$route监听路由发生变化
+    $route(to ,from) {
+      if(!this.$route.params && !this.$route.params.id) {
+        this.courseInfo={}
+      }
+    }
   },
   methods: {
     saveOrUpdate() {
@@ -107,19 +122,16 @@ export default {
     getTeacherList() {
       courseApi.getListTeacher()
         .then(response =>{
-          debugger
           this.teacherList = response.data.list
         })
     },
     getSubjectList() {
       subjectApi.getAllsubject()
         .then(response =>{
-          debugger
           this.subjectOneList = response.data.jsonObject
         })
     },
     selectOneSubject(value) {
-      debugger
       //value是一级分类的值
       for(let i = 0; i < this.subjectOneList.length;i++) {
         if(this.subjectOneList[i].id === value) {  
@@ -144,6 +156,28 @@ export default {
       }
       return isJPG && isLt2M
 
+    },
+    //根据id获取课程信息
+    getInfo() {
+      courseApi.getCourseInfoByCourseId(this.courseId)
+        .then(response => {
+          this.courseInfo = response.data.courseInfoVo
+          subjectApi.getAllsubject()
+            .then(response => {
+              //获取所有一级分类
+              this.subjectOneList = response.data.jsonObject
+              for(let i = 0 ;i < this.subjectOneList.length; i++) {
+                let oneSubject = this.subjectOneList[i]
+                if(this.courseInfo.subjectParentId === oneSubject.id){
+                  //获取一级分类下面的所有二级分类
+                  this.subjectTwoList = oneSubject.children
+
+                }
+
+              }
+            })
+          this.getTeacherList()
+        })
     }
   },
   components:{
