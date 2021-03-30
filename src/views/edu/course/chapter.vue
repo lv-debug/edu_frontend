@@ -6,7 +6,6 @@
       <el-step title="创建课程大纲"/>
       <el-step title="发布"/>
     </el-steps>
-
     <!-- 章节 -->
     <ul class="chanpterList">
         <li
