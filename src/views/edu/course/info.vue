@@ -113,10 +113,25 @@ export default {
   },
   methods: {
     saveOrUpdate() {
+      if(this.courseId) {
+        this.updateCourse()
+      }else {
+        this.addCourse()
+      }
+      
+    },
+    addCourse() {
       courseApi.addCourse(this.courseInfo)
         .then(response =>{
           this.$message({type: 'success',message: '添加成功!'});
           this.$router.push({path:'/course/chapter/'+response.data.cId})
+        })
+    },
+    updateCourse() {
+      courseApi.updateCourse(this.courseInfo)
+        .then(response =>{
+          this.$message({type: 'success',message: '修改成功!'});
+          this.$router.push({path:'/course/chapter/'+this.courseId})
         })
     },
     getTeacherList() {
