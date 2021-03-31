@@ -16,6 +16,7 @@
             <p>
                 {{ chapter.title }}
                 <span class="acts">
+                  <el-button type="text" @click="openVideoDialog(chapter.id)">添加小节</el-button>
                   <el-button type="text" @click="openEditChapter(chapter.id)">编辑</el-button>
                   <el-button type="text" @click="deleteChapter(chapter.id)">删除</el-button>
                 </span>
@@ -25,6 +26,10 @@
                     v-for="video in chapter.children"
                     :key="video.id">
                     <p>{{ video.title }}
+                    <span class="acts">
+                      <el-button type="text" @click="openEditVideo(video.id)">编辑</el-button>
+                      <el-button type="text" @click="deleteVideo(video.id)">删除</el-button>
+                    </span>
                     </p>
                 </li>
             </ul>
@@ -50,11 +55,37 @@
             <el-button type="primary" @click="saveOrUpdate">确 定</el-button>
         </div>
     </el-dialog>
+
+    <!-- 添加和修改课时表单 -->
+    <el-dialog :visible.sync="dialogVideoFormVisible" title="添加课时">
+      <el-form :model="video" label-width="120px">
+        <el-form-item label="课时标题">
+          <el-input v-model="video.title"/>
+        </el-form-item>
+        <el-form-item label="课时排序">
+          <el-input-number v-model="video.sort" :min="0" controls-position="right"/>
+        </el-form-item>
+        <el-form-item label="是否免费">
+          <el-radio-group v-model="video.free">
+            <el-radio :label="true">免费</el-radio>
+            <el-radio :label="false">默认</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="上传视频">
+          <!-- TODO -->
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVideoFormVisible = false">取 消</el-button>
+        <el-button :disabled="saveVideoBtnDisabled" type="primary" @click="saveOrUpdateVideo">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 
 import chapterApi from '@/api/edu/chapter'
+import videoApi from '@/api/edu/video'
 
 export default {
   data() {
@@ -63,10 +94,16 @@ export default {
       chapterVideoList:[],
       courseId:'',
       dialogChapterFormVisible:false,
+      dialogVideoFormVisible:false,
       chapter: {
         title: '',
         sort:0
-      }
+      },
+      video: {
+        title: '',
+        sort: 0,
+        free: '',
+      },
     }
   },
   
@@ -77,6 +114,72 @@ export default {
     }
   },
   methods: {
+
+    //------------------------------------小节--------------------------------
+    openVideoDialog(chapterId) {
+      this.video = {}
+      this.video.chapterId=chapterId
+      this.dialogVideoFormVisible = true
+    },
+    //编辑小节
+    openEditVideo(videoId) {
+      this.dialogVideoFormVisible = true
+      videoApi.getVideo(videoId)
+        .then(response =>{
+          this.video = response.data.eduVideo
+        })
+    },
+    //修改、保存方法
+    saveOrUpdateVideo() {
+      this.video.courseId = this.courseId
+      if(this.video.id){
+        videoApi.updateVideo(this.video)
+          .then(response =>{
+            this.dialogVideoFormVisible = false
+            this.$message({type: 'success',message: '修改成功!'});
+            this.getChapterVideo()
+          })
+      }else{
+        videoApi.addVideo(this.video)
+          .then(response =>{
+            this.dialogVideoFormVisible = false
+            this.$message({type: 'success',message: '添加成功!'});
+            this.getChapterVideo()
+          })
+      }
+    },
+    //删除小节
+    deleteVideo(videoId) {
+      this.$confirm('此操作将永久删除小节记录, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                videoApi.delVideo(videoId)
+                  .then(response =>{
+                    this.$message({type: 'success',message: '删除成功!'})
+                  this.getChapterVideo()
+                })
+            })
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //-------------------------------------章节--------------------------------
     previous() {
       this.$router.push({ path: '/course/info/'+this.courseId })
     },
