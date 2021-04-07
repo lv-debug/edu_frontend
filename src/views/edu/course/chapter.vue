@@ -115,6 +115,13 @@ export default {
   },
   methods: {
 
+    previous() {
+      this.$router.push({ path: '/course/info/'+this.courseId })
+    },
+    next() {
+      this.$router.push({ path: '/course/publish/'+this.courseId })
+    },
+
     //------------------------------------小节--------------------------------
     openVideoDialog(chapterId) {
       this.video = {}
@@ -163,35 +170,13 @@ export default {
             })
     },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //-------------------------------------章节--------------------------------
-    previous() {
-      this.$router.push({ path: '/course/info/'+this.courseId })
-    },
+   
     getChapterVideo() {
       chapterApi.getListChapter(this.courseId)
         .then(response =>{
           this.chapterVideoList = response.data.chapterVos
         })
-    },
-    next() {
-      console.log('next')
-      this.$router.push({ path: '/course/publish/'+this.courseId })
     },
     //弹出添加章节
     openChapterDialog() {

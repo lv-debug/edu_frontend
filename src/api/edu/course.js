@@ -37,4 +37,33 @@ export default {
     })
   },
 
+  getCoursePublishVoById(courseId) {
+    return request({
+      url: `/eduservice/edu-course/getCoursePublishVoById/${courseId}`,
+      method: 'get'
+    })
+  },
+
+  publishCourse(courseId) {
+    return request({
+      url: `/eduservice/edu-course/publishCourse/${courseId}`,
+      method: 'get'
+    })
+  },
+  pageListCourse(current, limit, courseQuery) {
+    return request({
+      url: `/eduservice/edu-course/pageCourseQuery/${current}/${limit}`,
+      method: 'post',
+      //data:表示转换为json数据传递,和后台requestBody对应
+      data : courseQuery
+    })
+  },
+  deleteCourse(courseId) {
+    return request({
+      url: `/eduservice/edu-course/deleteCourse/${courseId}`,
+      method: 'delete'
+    })
+  },
+
+
 } 
