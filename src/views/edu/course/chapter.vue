@@ -209,7 +209,14 @@ export default {
     },
     //删除小节
     handleVodRemove() {
-
+      videoApi.removeAliyVod(this.video.videoSourceId)
+        .then(response =>{
+          this.$message({type: 'success',message: '删除视频成功!'})
+          this.fileList = []
+          //删除视频后需要清空数据表的视频id和视频名称
+          this.video.videoSourceId = ''
+          this.video.videoOriginalName = ''
+        })
     },
 
     //-------------------------------------章节--------------------------------
