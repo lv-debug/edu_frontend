@@ -50,7 +50,7 @@ export default {
       courseApi.publishCourse(this.courseId)
         .then(response =>{
           this.$message({type: 'success',message: '发布成功!'});
-          this.$router.push({ path: '/course/list' })
+          this.$router.push({ path: '/course/table' })
         })
     },
     coursePublishVoById(courseId) {
