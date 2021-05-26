@@ -121,7 +121,7 @@ export default {
         teacherApi.addTeacher(this.teacher)
           .then(response =>{
           this.$message({type: 'success',message: '添加成功!'});
-          this.$router.push({path:'/teacher/table'})
+          this.$router.push({path:'/teacher/list'})
         })
       },
 
@@ -138,7 +138,7 @@ export default {
         teacherApi.updTeacher(this.teacher)
           .then(response =>{
             this.$message({type: 'success',message: '修改成功!'});
-            this.$router.push({path:'/teacher/table'})
+            this.$router.push({path:'/teacher/list'})
           })
       },
 

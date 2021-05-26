@@ -381,7 +381,7 @@ export const asyncRoutes = [
   {
     path: '/teacher',
     component: Layout,
-    redirect: '/teacher/table',
+    redirect: '/teacher/list',
     name: '讲师管理',
     meta: { title: '讲师管理', icon: 'example' },
     children: [
